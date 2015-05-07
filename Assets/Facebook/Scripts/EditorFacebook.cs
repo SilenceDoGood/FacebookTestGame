@@ -241,11 +241,12 @@ namespace Facebook
                 fb.AccessToken = accessToken;
                 isLoggedIn = true;
 
-                OnAuthResponse(new FBResult(""));
+				OnAuthResponse(new FBResult(""));
 
             }
             catch (Exception e)
             {
+				Debug.Log(e);
                 BadAccessToken("Could not get data from access token: " + e.Message);
             }
         }

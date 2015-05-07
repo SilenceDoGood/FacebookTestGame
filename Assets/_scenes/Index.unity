@@ -473,6 +473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   facebookPanel: {fileID: 451101305}
   facebookProfilePicture: {fileID: 636499691}
+  facebookLoginButton: {fileID: 883343198}
   facebookUsername: {fileID: 799956268}
 --- !u!114 &1502900377
 MonoBehaviour:

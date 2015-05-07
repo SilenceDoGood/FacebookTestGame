@@ -217,7 +217,6 @@ public class ConsoleBase : MonoBehaviour
     {
         // It is generally good behavior to split asking for read and publish
         // permissions rather than ask for them all at once.
-        //
         // In your own game, consider postponing this call until the moment
         // you actually need it.
         FB.Login("publish_actions", LoginCallback);
