@@ -47,7 +47,7 @@ public class FacebookMenu : MonoBehaviour
 	{
 		if(FB.IsLoggedIn)
 		{
-			FB.API("/v2.3/me?fields=friends.fields(id,first_name,last_name,picture.width(128))", HttpMethod.GET, FriendsCallback);
+			//FB.API("/v2.3/me/friends)", HttpMethod.GET, FriendsCallback);
 		}
 	}
 
