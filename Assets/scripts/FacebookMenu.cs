@@ -14,7 +14,8 @@ public class FacebookMenu : MonoBehaviour
 
 	public static event Action OnLoggedIn;
 
-	private Dictionary<string, string> profile = null;
+	private Dictionary<string, object> profile = null;
+	private Sprite profileSprite = null;
 
 	void Awake()
 	{
@@ -53,7 +54,7 @@ public class FacebookMenu : MonoBehaviour
 			Debug.Log("Login Successful");
 			facebookLoginButton.enabled = false;
 			facebookPanel.SetActive(true);
-			FB.API("/v2.3/me?fields=id, first_name, last_name", HttpMethod.GET, APICallBack);
+			FB.API("/v2.3/me?fields=id,first_name,last_name,picture.width(865)", HttpMethod.GET, APIProfileCallBack);
 			if (OnLoggedIn != null)
 			{
 				OnLoggedIn();
@@ -61,19 +62,44 @@ public class FacebookMenu : MonoBehaviour
 		}
 	}
 
-	private void APICallBack(FBResult result)
+	private void APIProfileCallBack(FBResult result)
 	{
 		if (result.Error != null)
 		{
 			Debug.Log("Facebook API Call failed! " + result.Error);
 			return;
 		}
-		Debug.Log(result.Text);
+		profile = Util.DeserializeJSONProfile(result.Text);
+		InitFaceBookProfile();
 	}
 
-	private IEnumerator GetProfilePicture()
+	private delegate void LoadPictureCallback (Texture2D texture);
+
+	private void InitFaceBookProfile()
 	{
-		yield return null;
+		facebookUsername.text = "" + profile["first_name"] + " " + profile["last_name"];
+
+		var pictureData = (Dictionary<string, object>)profile["picture"];
+		var pictureInfo = (Dictionary<string, object>)pictureData["data"];
+
+
+		StartCoroutine(GetProfilePicture(pictureInfo["url"].ToString(), LoadPicture));
+	}
+
+	private void LoadPicture(Texture2D texture)
+	{
+		var picture = Sprite.Create(texture, new Rect(0, 0, 865f, 865f), Vector2.zero);
+		facebookProfilePicture.sprite = picture;
+	}
+
+	private IEnumerator GetProfilePicture(string url, LoadPictureCallback callback = null)
+	{
+		WWW www = new WWW(url);
+		yield return www;
+		if(callback != null)
+		{
+			callback(www.texture);
+		}
 	}
 
 	private void OnHideUnity(bool isGameShown)
