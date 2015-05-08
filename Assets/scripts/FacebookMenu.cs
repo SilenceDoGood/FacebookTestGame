@@ -43,6 +43,26 @@ public class FacebookMenu : MonoBehaviour
 		FB.Login("user_friends, email, publish_actions, public_profile", LoginCallback);
 	}
 
+	public void Friends()
+	{
+		if(FB.IsLoggedIn)
+		{
+			FB.API("/v2.3/me?fields=friends.fields(id,first_name,last_name,picture.width(128))", HttpMethod.GET, FriendsCallback);
+		}
+	}
+
+	private void FriendsCallback(FBResult result)
+	{
+		if(!string.IsNullOrEmpty(result.Error))
+		{
+			Debug.Log("Error during Inviteable_friends call! " + result.Error);
+		}
+		else if (FB.IsLoggedIn)
+		{
+			Debug.Log(result.Text);
+		}
+	}
+
 	private void LoginCallback(FBResult result)
 	{
 		if (!string.IsNullOrEmpty(result.Error)) 
@@ -69,6 +89,7 @@ public class FacebookMenu : MonoBehaviour
 			Debug.Log("Facebook API Call failed! " + result.Error);
 			return;
 		}
+		Debug.Log (result.Text);
 		profile = Util.DeserializeJSONProfile(result.Text);
 		InitFaceBookProfile();
 	}
