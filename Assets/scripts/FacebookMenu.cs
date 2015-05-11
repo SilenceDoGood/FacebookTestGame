@@ -12,6 +12,8 @@ public class FacebookMenu : MonoBehaviour
 	public Image facebookLoginButton;
 	public Text facebookUsername;
 
+	public Text debugText;
+
 	public static event Action OnLoggedIn;
 
 	private Dictionary<string, object> profile = null;
@@ -25,11 +27,6 @@ public class FacebookMenu : MonoBehaviour
 	void Start()
 	{
 		FB.Init(OnInitComplete, OnHideUnity);
-	}
-
-	void Update()
-	{
-
 	}
 
 	public void OnInitComplete()
@@ -47,7 +44,7 @@ public class FacebookMenu : MonoBehaviour
 	{
 		if(FB.IsLoggedIn)
 		{
-			//FB.API("/v2.3/me/friends)", HttpMethod.GET, FriendsCallback);
+			FB.API("/v2.3/me/invitable_friends", HttpMethod.GET, FriendsCallback);
 		}
 	}
 
@@ -55,10 +52,13 @@ public class FacebookMenu : MonoBehaviour
 	{
 		if(!string.IsNullOrEmpty(result.Error))
 		{
+			debugText.text += " " + result.Error;
 			Debug.Log("Error during Inviteable_friends call! " + result.Error);
 		}
 		else if (FB.IsLoggedIn)
 		{
+			debugText.text += " " + result.Text;
+			var friendsList = Util.DeserializeJSONFriendsList(result.Text);
 			Debug.Log(result.Text);
 		}
 	}
@@ -99,11 +99,7 @@ public class FacebookMenu : MonoBehaviour
 	private void InitFaceBookProfile()
 	{
 		facebookUsername.text = "" + profile["first_name"] + " " + profile["last_name"];
-
-		var pictureData = (Dictionary<string, object>)profile["picture"];
-		var pictureInfo = (Dictionary<string, object>)pictureData["data"];
-
-
+		var pictureInfo = Util.DeserializeJSONProfilePictureData(profile);
 		StartCoroutine(GetProfilePicture(pictureInfo["url"].ToString(), LoadPicture));
 	}
 
