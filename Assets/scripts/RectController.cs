@@ -72,7 +72,10 @@ public class RectController : MonoBehaviour
         if (mode != ScaleMode.CustomRect)
         {
             if (image != null && image.sprite != null)
-                _aspectRatio = image.sprite.textureRect.width / image.sprite.textureRect.height;
+			{
+				_aspectRatio = image.sprite.textureRect.width / image.sprite.textureRect.height;
+				Debug.Log(image.sprite.textureRect.width + " x " + image.sprite.textureRect.height);
+			}
             if (mode == ScaleMode.SpriteAuto)
                 scaleByWidth = _aspectRatio >= 1;
         }

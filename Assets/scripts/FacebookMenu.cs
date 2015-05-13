@@ -14,6 +14,8 @@ public class FacebookMenu : MonoBehaviour
 
 	public Text debugText;
 
+	public GameObject pickerPrefab;
+
 	public static event Action OnLoggedIn;
 
 	private Dictionary<string, object> profile = null;
@@ -40,11 +42,11 @@ public class FacebookMenu : MonoBehaviour
 		FB.Login("user_friends, email, publish_actions, public_profile", LoginCallback);
 	}
 
-	public void Friends()
+	public void FriendsAPICall()
 	{
 		if(FB.IsLoggedIn)
 		{
-			FB.API("/v2.3/me/invitable_friends", HttpMethod.GET, FriendsCallback);
+			FB.API("/v2.3/me/invitable_friends?fields=id,name,picture.width(130)", HttpMethod.GET, FriendsCallback);
 		}
 	}
 
@@ -59,7 +61,7 @@ public class FacebookMenu : MonoBehaviour
 		{
 			debugText.text += " " + result.Text;
 			var friendsList = Util.DeserializeJSONFriendsList(result.Text);
-			Debug.Log(result.Text);
+			GameObject.FindObjectOfType<FriendPicker>().Initialize(friendsList, this.transform);
 		}
 	}
 
@@ -106,6 +108,7 @@ public class FacebookMenu : MonoBehaviour
 	private void LoadPicture(Texture2D texture)
 	{
 		var picture = Sprite.Create(texture, new Rect(0, 0, 865f, 865f), Vector2.zero);
+		Debug.Log(new Rect(0, 0, 865f, 865f));
 		facebookProfilePicture.sprite = picture;
 	}
 
