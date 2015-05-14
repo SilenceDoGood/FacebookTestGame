@@ -49,7 +49,6 @@ public class FriendPill : MonoBehaviour
 	private void CreateFriendSprite(Texture2D texture)
 	{
 		var friendSprite = Sprite.Create(texture, spriteRect, Vector2.zero);
-		Debug.Log(spriteRect);
 		friendImage.sprite = friendSprite;
 	}
 

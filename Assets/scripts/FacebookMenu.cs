@@ -61,7 +61,8 @@ public class FacebookMenu : MonoBehaviour
 		{
 			debugText.text += " " + result.Text;
 			var friendsList = Util.DeserializeJSONFriendsList(result.Text);
-			GameObject.FindObjectOfType<FriendPicker>().Initialize(friendsList, this.transform);
+			var friendPicker = ((GameObject)Instantiate(pickerPrefab)).GetComponentInChildren<FriendPicker>();
+			friendPicker.Initialize(friendsList, null, "Send Message");
 		}
 	}
 
